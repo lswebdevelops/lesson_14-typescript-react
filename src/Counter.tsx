@@ -1,19 +1,22 @@
-import { ReactNode, useReducer } from "react";
+import { ReactNode, useReducer, ChangeEvent } from "react";
 
 type ChildrenType = {
   children: (num: number) => ReactNode;
 };
 
-const initState = { count: 0 };
+const initState = { count: 0, text: '' };
 
 const enum REDUCER_ACTION_TYPE {
   INCREMENT,
   DECREMENT,
+  NEW_INPUT,
 }
 
 type ReducerAction = {
   type: REDUCER_ACTION_TYPE;
+  payload?: string,
 };
+
 const reducer = (
   state: typeof initState,
   action: ReducerAction
@@ -23,6 +26,10 @@ const reducer = (
       return { ...state, count: state.count + 1 };
     case REDUCER_ACTION_TYPE.DECREMENT:
       return { ...state, count: state.count - 1 };
+      return { ...state, count: state.count + 1 };
+    case REDUCER_ACTION_TYPE.NEW_INPUT:
+        // ?? if not null ==> '' make it an empty string
+      return { ...state, text: action.payload ?? ''};
     default:
       throw new Error();
   }
@@ -33,6 +40,9 @@ const Counter = ({ children }: ChildrenType) => {
   const [state, dispatch] = useReducer(reducer, initState);
   const increment = () => dispatch({ type: REDUCER_ACTION_TYPE.INCREMENT });
   const decrement = () => dispatch({ type: REDUCER_ACTION_TYPE.DECREMENT });
+  const handleTextInput = (e: ChangeEvent<HTMLInputElement>) => {
+    dispatch( { type: REDUCER_ACTION_TYPE.NEW_INPUT, payload: e.target.value})
+  }
 
   return (
     <>
@@ -40,7 +50,10 @@ const Counter = ({ children }: ChildrenType) => {
       <div>
         <button onClick={increment}>+</button>
         <button onClick={decrement}>-</button>
+
       </div>
+      <input type="text" onChange={handleTextInput} />
+      <h2>{state.text}</h2>
     </>
   );
 };
