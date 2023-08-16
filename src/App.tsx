@@ -1,11 +1,15 @@
-import Counter from "./Counter";
+import Counter from "./Counter"
+import { CounterProvider } from "./context/CounterContext"
 
 function App() {
+
   return (
     <>
-      <Counter>{(num: number) => <>Current count: {num}</>}</Counter>
+      <CounterProvider>
+        <Counter>{(num: number) => <>Current Count: {num}</>}</Counter>
+      </CounterProvider>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
